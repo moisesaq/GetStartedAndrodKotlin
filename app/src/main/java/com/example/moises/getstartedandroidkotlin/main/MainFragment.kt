@@ -7,18 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.moises.getstartedandroidkotlin.R
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
+import javax.inject.Inject
 
-class MainFragment : Fragment(), MainContract.View, View.OnClickListener {
+class MainFragment @Inject constructor(): Fragment(), MainContract.View, View.OnClickListener {
 
     private var mListener: OnMainFragmentListener? = null
-    private var presenter: MainContract.Presenter? = null
+    @Inject lateinit var presenter: MainPresenter
 
     override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
-        presenter = MainPresenter(this)
-
+        //presenter = MainPresenter(this)
+        presenter.setView(this)
         if (context !is OnMainFragmentListener)
             throw RuntimeException(context!!.toString() + " must implement OnMainFragmentListener")
         mListener = context

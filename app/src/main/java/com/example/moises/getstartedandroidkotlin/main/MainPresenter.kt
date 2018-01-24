@@ -1,11 +1,14 @@
 package com.example.moises.getstartedandroidkotlin.main
 
+import javax.inject.Inject
 
-class MainPresenter(view: MainContract.View): MainContract.Presenter {
+class MainPresenter @Inject constructor(): MainContract.Presenter {
 
-    val viewMain = view
+    var viewMain: MainContract.View? = null
 
-    override fun setView(view: MainContract.View) {}
+    override fun setView(view: MainContract.View) {
+        viewMain = view
+    }
 
     override fun doDispose() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

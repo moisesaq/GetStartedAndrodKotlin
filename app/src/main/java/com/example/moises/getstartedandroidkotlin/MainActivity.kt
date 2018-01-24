@@ -9,19 +9,27 @@ import com.example.moises.getstartedandroidkotlin.frag1.Fragment1
 import com.example.moises.getstartedandroidkotlin.frag2.Fragment2
 import com.example.moises.getstartedandroidkotlin.main.MainContract
 import com.example.moises.getstartedandroidkotlin.main.MainFragment
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainFragment.OnMainFragmentListener {
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector,
+        MainFragment.OnMainFragmentListener {
 
-    private var mainView: MainContract.View? = null
+    @Inject lateinit var injector: DispatchingAndroidInjector<Fragment>
+    @Inject lateinit var mainFrag: MainFragment//MainContract.View
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        mainView = MainFragment()
-        replaceFragment(mainView?.fragment, false)//MainFragment.newInstance(), false)
+        //mainView = MainFragment()
+        replaceFragment(mainFrag, false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -57,5 +65,12 @@ class MainActivity : AppCompatActivity(), MainFragment.OnMainFragmentListener {
 
     override fun onGoFragment2Click(message: String) {
         replaceFragment(Fragment2.newInstance(message), true)
+    }
+
+    /**
+     * Implementation HasSupportFragmentInjector
+     */
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return injector
     }
 }
